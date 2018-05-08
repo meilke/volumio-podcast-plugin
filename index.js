@@ -5,6 +5,7 @@ var fs = require('fs-extra');
 var config = require('v-conf');
 var RssParser = require('rss-parser');
 var _ = require('lodash');
+var podcastSearch = require('podcast-search');
 
 module.exports = ControllerPodcast;
 
@@ -125,6 +126,45 @@ ControllerPodcast.prototype.updateUIConfig = function() {
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
 
     fs.writeJsonSync(__dirname+'/podcasts_list.json', self.podcasts);
+  })
+  .fail(function()
+  {
+    new Error();
+  });
+};
+
+ControllerPodcast.prototype.showSearchResultUI = function() {
+  var self=this;
+
+  var lang_code = self.commandRouter.sharedVars.get('language_code');
+  self.commandRouter.i18nJson(__dirname+'/i18n/strings_' + lang_code + '.json',
+      __dirname + '/i18n/strings_en.json',
+      __dirname + '/UIConfig.json')
+  .then(function(uiconf)
+  {
+    self.podcasts.items.forEach(function (entry) {
+      self.configManager.pushUIConfigParam(uiconf, 'sections[0].content[0].options', {
+        label: entry.title,
+        value: entry.id
+      });
+    });
+    self.configManager.setUIConfigParam(uiconf, 'sections[0].content[0].value', {
+      value: self.podcasts.items[0].title,
+      label: self.podcasts.items[0].title
+    });
+
+    self.searchedPodcasts.items.forEach(function (entry) {
+      self.configManager.pushUIConfigParam(uiconf, 'sections[2].content[2].options', {
+        label: entry.title,
+        value: entry.url
+      });
+    });
+    self.configManager.setUIConfigParam(uiconf, 'sections[2].content[2].value', {
+      value: self.searchedPodcasts.items[0].title,
+      label: self.searchedPodcasts.items[0].title
+    });
+
+    self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
   })
   .fail(function()
   {
@@ -285,6 +325,27 @@ ControllerPodcast.prototype.showDialogMessage = function(message) {
   };
   self.commandRouter.broadcastMessage("openModal", modalData);
 };
+
+ControllerPodcast.prototype.searchPodcast = function(data) {
+  var self = this;
+  var searchPodcast = data['search_podcast'];
+
+  self.logger.info("ControllerPodcast::searchPodcast:"+JSON.stringify(data));
+  podcastSearch(searchPodcast)
+    .then( function(data) {
+      self.searchedPodcasts = data;
+
+      self.showSearchResultUI();
+    });
+};
+
+ControllerPodcast.prototype.searchAddPodcast = function(data) {
+  var self = this;
+  var searchListPodcast = data['search_list_podcast'];
+
+  self.logger.info("ControllerPodcast::searchListPodcast:"+JSON.stringify(data));
+};
+
 
 // Playback Controls ---------------------------------------------------------
 ControllerPodcast.prototype.addToBrowseSources = function () {
@@ -556,6 +617,7 @@ ControllerPodcast.prototype.loadPodcastsResource = function() {
   var self=this;
 
   self.podcasts = fs.readJsonSync(__dirname+'/podcasts_list.json');
+  self.searchedPodcasts = null;
 };
 
 ControllerPodcast.prototype.loadPodcastI18nStrings = function () {
