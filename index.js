@@ -331,10 +331,10 @@ ControllerPodcast.prototype.showDialogMessage = function(message) {
 
 ControllerPodcast.prototype.searchPodcast = function(data) {
   var self = this;
-  var searchPodcast = data['search_podcast'];
+  var searchPodcast = data['search_input_podcast'];
 
   self.logger.info("ControllerPodcast::searchPodcast:"+JSON.stringify(data));
-  podcastSearch(searchPodcast)
+  podcastSearch.search(searchPodcast)
     .then( function(data) {
       self.searchedPodcasts = data;
 
@@ -344,7 +344,7 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
 
 ControllerPodcast.prototype.searchAddPodcast = function(data) {
   var self = this;
-  var searchListPodcast = data['search_list_podcast'];
+  var searchListPodcast = data['search_list_podcast'].value;
 
   self.logger.info("ControllerPodcast::searchListPodcast:"+JSON.stringify(data));
 };
