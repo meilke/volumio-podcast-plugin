@@ -331,7 +331,7 @@ ControllerPodcast.prototype.showDialogMessage = function(message) {
 
 ControllerPodcast.prototype.searchPodcast = function(data) {
   var self = this;
-  var searchPodcast = data['search_input_podcast'];
+  var searchPodcast = data['search_input_podcast'].trim();
 
   self.logger.info("ControllerPodcast::searchPodcast:"+JSON.stringify(data));
   podcastSearch.search(searchPodcast)

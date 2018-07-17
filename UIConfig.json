@@ -61,9 +61,36 @@
     {
       "id": "search_podcast",
       "element": "section",
-      "label": "TRANSLATE.CONFIG.SEARCH_ADD_PODCAST",
+      "label": "TRANSLATE.CONFIG.SEARCH_PODCAST",
       "icon": "fa-cogs",
-      "description":  "TRANSLATE.CONFIG.SEARCH_PODCAST_DESCRIPTION",
+      "description": "TRANSLATE.CONFIG.SEARCH_PODCAST_DESCRIPTION",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "music_service/podcast",
+        "method": "searchPodcast"
+      },
+      "saveButton": {
+        "label": "TRANSLATE.CONFIG.ADD_PODCAST",
+        "data": [
+          "search_input_podcast"
+        ]
+      },
+      "content": [
+        {
+          "id": "search_input_podcast",
+          "type": "text",
+          "element": "input",
+          "label": "TRANSLATE.CONFIG.PODCAST_NAME",
+          "value": "",
+          "description": "TRANSLATE.CONFIG.SEARCH_PODCAST_NOTE"
+        }
+      ]
+    },
+    {
+      "id": "search_list_podcast",
+      "element": "section",
+      "label": "TRANSLATE.CONFIG.SEARCH_LIST_PODCAST",
+      "icon": "fa-cogs",
       "onSave": {
         "type": "controller",
         "endpoint": "music_service/podcast",
@@ -77,28 +104,6 @@
       },
       "content": [
         {
-          "id": "search_input_podcast",
-          "type": "text",
-          "element": "input",
-          "label":  "TRANSLATE.CONFIG.PODCAST_NAME",
-          "value": "",
-          "description": "TRANSLATE.CONFIG.SEARCH_PODCAST_NOTE"
-        },
-        {
-          "id": "search_podcast",
-          "element": "button",
-          "label": "TRANSLATE.CONFIG.SEARCH_PODCAST",
-          "onClick": {
-            "type": "emit",
-            "message": "callMethod",
-            "data": {
-              "endpoint": "music_service/podcast",
-              "method": "searchPodcast",
-              "data":  ["search_input_podcast"]
-            }
-          }
-        },
-        {
           "id": "search_list_podcast",
           "element": "select",
           "label": "TRANSLATE.CONFIG.SEARCH_LIST_PODCAST",
@@ -107,6 +112,5 @@
         }
       ]
     }
-
   ]
 }
