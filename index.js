@@ -163,8 +163,19 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
       });
     });
     self.configManager.setUIConfigParam(uiconf, 'sections[3].content[0].value', {
-      value: self.searchedPodcasts.items[0].title,
-      label: self.searchedPodcasts.items[0].title
+      value: self.searchedPodcasts[0].title,
+      label: self.searchedPodcasts[0].title
+    });
+
+    self.searchedPodcasts.forEach(function (entry) {
+      self.configManager.pushUIConfigParam(uiconf, 'sections[2].content[1].options', {
+        label: entry.title,
+        value: entry.url
+      });
+    });
+    self.configManager.setUIConfigParam(uiconf, 'sections[2].content[1].value', {
+      value: self.searchedPodcasts[0].title,
+      label: self.searchedPodcasts[0].title
     });
 
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
@@ -343,6 +354,20 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
         return (index > 30);    // limits search result
       });
       self.showSearchResultUI();
+
+      this.emit('openModal', {
+        'title':'title',
+        'message': 'body message',
+        'buttons':[
+          {
+            'name': 'search',
+            'class':'btn btn-info',
+            'emit':'searchAddPodcast',
+            'payload':
+                {'category': self.searchedPodcasts ,'name': 'result'}},
+                {'name': 'cancel','class':'btn btn-warning'}
+        ]});
+
     });
 };
 
