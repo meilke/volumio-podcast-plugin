@@ -156,13 +156,13 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
       label: self.podcasts.items[0].title
     });
 
-    self.searchedPodcasts.items.forEach(function (entry) {
-      self.configManager.pushUIConfigParam(uiconf, 'sections[2].content[2].options', {
+    self.searchedPodcasts.forEach(function (entry) {
+      self.configManager.pushUIConfigParam(uiconf, 'sections[3].content[0].options', {
         label: entry.title,
         value: entry.url
       });
     });
-    self.configManager.setUIConfigParam(uiconf, 'sections[2].content[2].value', {
+    self.configManager.setUIConfigParam(uiconf, 'sections[3].content[0].value', {
       value: self.searchedPodcasts.items[0].title,
       label: self.searchedPodcasts.items[0].title
     });
@@ -333,11 +333,15 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
   var self = this;
   var searchPodcast = data['search_input_podcast'].trim();
 
-  self.logger.info("ControllerPodcast::searchPodcast:"+JSON.stringify(data));
+  self.logger.info("ControllerPodcast::searchPodcast:"+searchPodcast);
   podcastSearch.search(searchPodcast)
     .then( function(data) {
-      self.searchedPodcasts = data;
 
+      self.searchedPodcasts = [];
+      data.some(function (entry, index) {
+        self.searchedPodcasts.push(entry);
+        return (index > 30);    // limits search result
+      });
       self.showSearchResultUI();
     });
 };
@@ -346,7 +350,7 @@ ControllerPodcast.prototype.searchAddPodcast = function(data) {
   var self = this;
   var searchListPodcast = data['search_list_podcast'].value;
 
-  self.logger.info("ControllerPodcast::searchListPodcast:"+JSON.stringify(data));
+  self.logger.info("ControllerPodcast::searchListPodcast:"+searchListPodcast);
 };
 
 
