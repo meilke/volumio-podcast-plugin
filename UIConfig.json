@@ -94,7 +94,7 @@
         {
           "id": "search_podcast",
           "element": "button",
-          "label": "TRANSLATE.CONFIG.SEARCH_ADD_PODCAST",
+          "label": "TRANSLATE.CONFIG.SEARCH_ADD_RESULT_PODCAST",
           "onClick": {
             "type": "emit",
             "message": "callMethod",

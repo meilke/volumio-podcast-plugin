@@ -36,9 +36,9 @@
     "DELETE_PODCAST_DESCRIPTION": "팟캐스트 리스트에서 삭제할 팟캐스트 항목을 선택하세요.",
     "ADD_PODCAST_DESCRIPTION": "추가할 팟캐스트 RSS 연결 url을 입력하여 주세요.",
     "SEARCH_PODCAST": "팟캐스트 검색",
-    "SEARCH_ADD_PODCAST": "팟캐스트 검색 및 등록",
+    "SEARCH_ADD_RESULT_PODCAST": "검색결과 등록",
     "SEARCH_PODCAST_DESCRIPTION": "검색할 팟캐스트명 입력",
-    "SEARCH_PODCAST_NOTE": "검색 노트",
+    "SEARCH_PODCAST_NOTE": "Gpoddernet 팟캐스트 메타 정보 사용",
     "SEARCH_LIST_PODCAST": "검색 결과"
   }
 }

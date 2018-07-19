@@ -36,9 +36,9 @@
     "DELETE_PODCAST_DESCRIPTION": "Select podcast to delete from podcasts",
     "ADD_PODCAST_DESCRIPTION": "Type podcast RSS feed link url",
     "SEARCH_PODCAST": "search podcast",
-    "SEARCH_ADD_PODCAST": "search and add podcast",
+    "SEARCH_ADD_RESULT_PODCAST": "add search result podcast",
     "SEARCH_PODCAST_DESCRIPTION": "Type podcast name to search",
-    "SEARCH_PODCAST_NOTE": "Search Note",
+    "SEARCH_PODCAST_NOTE": "Uses metadata from Gpoddernet",
     "SEARCH_LIST_PODCAST": "search result"
   }
 }

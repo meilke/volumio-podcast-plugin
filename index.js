@@ -163,8 +163,8 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
       });
     });
     self.configManager.setUIConfigParam(uiconf, 'sections[3].content[0].value', {
-      value: self.searchedPodcasts[0].title,
-      label: self.searchedPodcasts[0].title
+      label: self.searchedPodcasts[0].title,
+      value: self.searchedPodcasts[0].url
     });
 
     self.searchedPodcasts.forEach(function (entry) {
@@ -174,8 +174,8 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
       });
     });
     self.configManager.setUIConfigParam(uiconf, 'sections[2].content[1].value', {
-      value: self.searchedPodcasts[0].title,
-      label: self.searchedPodcasts[0].title
+      label: self.searchedPodcasts[0].title,
+      value: self.searchedPodcasts[0].url
     });
 
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
@@ -196,10 +196,7 @@ ControllerPodcast.prototype.setUIConfig = function(data)
 };
 
 // Podcast Methods -----------------------------------------------------
-ControllerPodcast.prototype.addPodcast = function(data) {
-  var self=this;
-  var defer = libQ.defer();
-  var rssUrl = data['input_podcast'].trim();
+ControllerPodcast.prototype.checkPodcast = function(rssUrl) {
   var message;
 
   if ((rssUrl === null) || (rssUrl.length === 0)) {
@@ -252,7 +249,7 @@ ControllerPodcast.prototype.addPodcast = function(data) {
 
       podcastItem = {
         id: Math.random().toString(36).substring(2, 10) +
-            Math.random().toString(36).substring(2, 10),
+        Math.random().toString(36).substring(2, 10),
         title: feed.title,
         url: rssUrl,
         image: imageUrl
@@ -268,8 +265,16 @@ ControllerPodcast.prototype.addPodcast = function(data) {
           self.getPodcastI18nString('PLUGIN_NAME'),
           message
       );
-      defer.resolve({});
-  });
+    }
+  );
+};
+
+ControllerPodcast.prototype.addPodcast = function(data) {
+  var self=this;
+  var defer = libQ.defer();
+  var rssUrl = data['input_podcast'].trim();
+
+  self.checkPodcast(rssUrl);
 
   return defer.promise;
 };
@@ -354,7 +359,7 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
         return (index > 30);    // limits search result
       });
       self.showSearchResultUI();
-
+/*
       this.emit('openModal', {
         'title':'title',
         'message': 'body message',
@@ -367,15 +372,25 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
                 {'category': self.searchedPodcasts ,'name': 'result'}},
                 {'name': 'cancel','class':'btn btn-warning'}
         ]});
-
+*/
     });
 };
 
-ControllerPodcast.prototype.searchAddPodcast = function(data) {
+ControllerPodcast.prototype.searchAddPodcast = function() {
   var self = this;
-  var searchListPodcast = data['search_list_podcast'].value;
 
-  self.logger.info("ControllerPodcast::searchListPodcast:"+searchListPodcast);
+  var lang_code = self.commandRouter.sharedVars.get('language_code');
+  self.commandRouter.i18nJson(__dirname+'/i18n/strings_' + lang_code + '.json',
+      __dirname + '/i18n/strings_en.json',
+      __dirname + '/UIConfig.json')
+  .then(function(uiconf) {
+    var searchedResult = self.configManager.getValue(uiconf,
+        'sections[2].content[1].value');
+    self.logger.info("ControllerPodcast::searchListPodcast:" + JSON.stringify(
+        searchedResult));
+
+    self.checkPodcast(searchedResult.url);
+  });
 };
 
 
