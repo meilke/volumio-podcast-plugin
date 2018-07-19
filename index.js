@@ -96,6 +96,7 @@ ControllerPodcast.prototype.getUIConfig = function() {
       uiconf.sections[0].content[0].options.push(podcastItem);
     });
     uiconf.sections[0].content[0].value = uiconf.sections[0].content[0].options[0];
+    self.uiconf = uiconf;
 
     defer.resolve(uiconf);
   })
@@ -127,6 +128,7 @@ ControllerPodcast.prototype.updateUIConfig = function() {
       label: self.podcasts.items[0].title
     });
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
+    self.uiconf = uiconf;
 
     fs.writeJsonSync(__dirname+'/podcasts_list.json', self.podcasts);
   })
@@ -170,15 +172,18 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
     self.searchedPodcasts.forEach(function (entry) {
       self.configManager.pushUIConfigParam(uiconf, 'sections[2].content[1].options', {
         label: entry.title,
-        value: entry.url
+        value: entry.title,
+        url: entry.url
       });
     });
     self.configManager.setUIConfigParam(uiconf, 'sections[2].content[1].value', {
       label: self.searchedPodcasts[0].title,
-      value: self.searchedPodcasts[0].url
+      value: self.searchedPodcasts[0].title,
+      url: self.searchedPodcasts[0].url,
     });
 
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
+    self.uiconf = uiconf;
   })
   .fail(function()
   {
@@ -197,6 +202,7 @@ ControllerPodcast.prototype.setUIConfig = function(data)
 
 // Podcast Methods -----------------------------------------------------
 ControllerPodcast.prototype.checkPodcast = function(rssUrl) {
+  var self=this;
   var message;
 
   if ((rssUrl === null) || (rssUrl.length === 0)) {
@@ -379,18 +385,12 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
 ControllerPodcast.prototype.searchAddPodcast = function() {
   var self = this;
 
-  var lang_code = self.commandRouter.sharedVars.get('language_code');
-  self.commandRouter.i18nJson(__dirname+'/i18n/strings_' + lang_code + '.json',
-      __dirname + '/i18n/strings_en.json',
-      __dirname + '/UIConfig.json')
-  .then(function(uiconf) {
-    var searchedResult = self.configManager.getValue(uiconf,
-        'sections[2].content[1].value');
-    self.logger.info("ControllerPodcast::searchListPodcast:" + JSON.stringify(
-        searchedResult));
+  var searchedResult = self.configManager.getValue(self.uiconf,
+      'sections[2].content[1].value');
+  self.logger.info("ControllerPodcast::searchAddPodcast:" + JSON.stringify(
+      searchedResult));
 
-    self.checkPodcast(searchedResult.url);
-  });
+  self.checkPodcast(searchedResult.url);
 };
 
 
