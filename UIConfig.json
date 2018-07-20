@@ -85,25 +85,34 @@
           "description": "TRANSLATE.CONFIG.SEARCH_PODCAST_NOTE"
         },
         {
-          "id": "search_list_podcast",
+          "id": "search_result_podcast",
           "element": "select",
-          "label": "TRANSLATE.CONFIG.SEARCH_LIST_PODCAST",
+          "label": "TRANSLATE.CONFIG.SEARCH_RESULT_PODCAST",
           "value": {},
           "options": []
         },
         {
           "id": "search_podcast",
           "element": "button",
+          "visibleIf": {"field": "search_result", "value": true},
           "label": "TRANSLATE.CONFIG.SEARCH_ADD_RESULT_PODCAST",
           "onClick": {}
+        },
+        {
+          "id": "search_result",
+          "element": "",
+          "label": "",
+          "hidden": true,
+          "value": false
         }
       ]
     },
     {
-      "id": "search_list_podcast",
+      "id": "search_result_podcast",
       "element": "section",
-      "label": "TRANSLATE.CONFIG.SEARCH_LIST_PODCAST",
+      "label": "TRANSLATE.CONFIG.SEARCH_RESULT_PODCAST",
       "icon": "fa-cogs",
+      "hidden": true,
       "onSave": {
         "type": "controller",
         "endpoint": "music_service/podcast",
@@ -112,12 +121,12 @@
       "saveButton": {
         "label": "TRANSLATE.CONFIG.ADD_PODCAST",
         "data": [
-          "search_list_podcast"
+          "search_result_podcast"
         ]
       },
       "content": [
         {
-          "id": "search_list_podcast",
+          "id": "search_result_podcast",
           "element": "select",
           "label": "TRANSLATE.CONFIG.SEARCH_LIST_PODCAST",
           "value": {},

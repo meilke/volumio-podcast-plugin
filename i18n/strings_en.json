@@ -39,6 +39,7 @@
     "SEARCH_ADD_RESULT_PODCAST": "add search result podcast",
     "SEARCH_PODCAST_DESCRIPTION": "Type podcast name to search",
     "SEARCH_PODCAST_NOTE": "Uses metadata from Gpoddernet",
-    "SEARCH_LIST_PODCAST": "search result"
+    "SEARCH_RESULT_PODCAST": "podcast search result",
+    "SEARCH_LIST_PODCAST": "result list"
   }
 }

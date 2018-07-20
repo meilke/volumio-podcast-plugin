@@ -157,17 +157,6 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
     });
 
     self.searchedPodcasts.forEach(function (entry) {
-      self.configManager.pushUIConfigParam(uiconf, 'sections[3].content[0].options', {
-        label: entry.title,
-        value: entry.url
-      });
-    });
-    self.configManager.setUIConfigParam(uiconf, 'sections[3].content[0].value', {
-      label: self.searchedPodcasts[0].title,
-      value: self.searchedPodcasts[0].url
-    });
-
-    self.searchedPodcasts.forEach(function (entry) {
       self.configManager.pushUIConfigParam(uiconf, 'sections[2].content[1].options', {
         label: entry.title,
         value: entry.title,
@@ -177,7 +166,7 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
     self.configManager.setUIConfigParam(uiconf, 'sections[2].content[1].value', {
       label: self.searchedPodcasts[0].title,
       value: self.searchedPodcasts[0].title,
-      url: self.searchedPodcasts[0].url,
+      url: self.searchedPodcasts[0].url
     });
 
     var onClick = {
@@ -190,6 +179,20 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
       }
     };
     uiconf.sections[2].content[2].onClick = onClick;
+
+    self.searchedPodcasts.forEach(function (entry) {
+      self.configManager.pushUIConfigParam(uiconf, 'sections[3].content[0].options', {
+        label: entry.title,
+        value: entry.title,
+        url: entry.url
+      });
+    });
+    self.configManager.setUIConfigParam(uiconf, 'sections[3].content[0].value', {
+      label: self.searchedPodcasts[0].title,
+      value: self.searchedPodcasts[0].title,
+      url: self.searchedPodcasts[0].url
+    });
+    self.configManager.setUIConfigParam(uiconf, 'sections[3].hidden', false);
 
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
   })
