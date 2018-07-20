@@ -96,7 +96,6 @@ ControllerPodcast.prototype.getUIConfig = function() {
       uiconf.sections[0].content[0].options.push(podcastItem);
     });
     uiconf.sections[0].content[0].value = uiconf.sections[0].content[0].options[0];
-    self.uiconf = uiconf;
 
     defer.resolve(uiconf);
   })
@@ -128,7 +127,6 @@ ControllerPodcast.prototype.updateUIConfig = function() {
       label: self.podcasts.items[0].title
     });
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
-    self.uiconf = uiconf;
 
     fs.writeJsonSync(__dirname+'/podcasts_list.json', self.podcasts);
   })
@@ -193,9 +191,7 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
     };
     uiconf.sections[2].content[2].onClick = onClick;
 
-
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
-    self.uiconf = uiconf;
   })
   .fail(function()
   {
@@ -365,7 +361,6 @@ ControllerPodcast.prototype.showDialogMessage = function(message) {
 
 ControllerPodcast.prototype.searchPodcast = function(data) {
   var self = this;
-  var defer = libQ.defer();
   var searchPodcast = data['search_input_podcast'].trim();
 
   self.logger.info("ControllerPodcast::searchPodcast:"+searchPodcast);
@@ -378,43 +373,17 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
         return (index > 30);    // limits search result
       });
       self.showSearchResultUI();
-      return defer.promise;
-/*
-      this.emit('openModal', {
-        'title':'title',
-        'message': 'body message',
-        'buttons':[
-          {
-            'name': 'search',
-            'class':'btn btn-info',
-            'emit':'searchAddPodcast',
-            'payload':
-                {'category': self.searchedPodcasts ,'name': 'result'}},
-                {'name': 'cancel','class':'btn btn-warning'}
-        ]});
-*/
     });
 };
 
-ControllerPodcast.prototype.searchAddPodcast = function() {
+ControllerPodcast.prototype.searchAddPodcast = function(data) {
   var self = this;
-  var defer = libQ.defer();
 
-  var lang_code = self.commandRouter.sharedVars.get('language_code');
-  self.commandRouter.i18nJson(__dirname+'/i18n/strings_' + lang_code + '.json',
-      __dirname + '/i18n/strings_en.json',
-      __dirname + '/UIConfig.json')
-  .then(function(uiconf) {
-    var searchedResult = self.configManager.getValue(uiconf,
-        'sections[2].content[1].value');
-    self.logger.info("ControllerPodcast::searchAddPodcast:" + JSON.stringify(
-        searchedResult));
+  self.logger.info("ControllerPodcast::searchAddPodcast:" + JSON.stringify(
+      data));
 
-    self.checkPodcast(searchedResult.url);
-    return defer.promise;
-  });
+  self.checkPodcast(data.url);
 };
-
 
 // Playback Controls ---------------------------------------------------------
 ControllerPodcast.prototype.addToBrowseSources = function () {
