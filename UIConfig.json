@@ -95,15 +95,7 @@
           "id": "search_podcast",
           "element": "button",
           "label": "TRANSLATE.CONFIG.SEARCH_ADD_RESULT_PODCAST",
-          "onClick": {
-            "type": "emit",
-            "message": "callMethod",
-            "data": {
-              "endpoint": "music_service/podcast",
-              "method": "searchAddPodcast",
-              "data":  ["search_input_podcast"]
-            }
-          }
+          "onClick": {}
         }
       ]
     },

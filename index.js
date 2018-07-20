@@ -182,6 +182,18 @@ ControllerPodcast.prototype.showSearchResultUI = function() {
       url: self.searchedPodcasts[0].url,
     });
 
+    var onClick = {
+      "type":"emit",
+      "message":"callMethod",
+      "data": {
+        "endpoint": "music_service/podcast",
+        "method":  "searchAddPodcast",
+        "data": self.configManager.getValue(uiconf, 'sections[2].content[1].value')
+      }
+    };
+    uiconf.sections[2].content[2].onClick = onClick;
+
+
     self.commandRouter.broadcastMessage('pushUiConfig', uiconf);
     self.uiconf = uiconf;
   })
@@ -353,6 +365,7 @@ ControllerPodcast.prototype.showDialogMessage = function(message) {
 
 ControllerPodcast.prototype.searchPodcast = function(data) {
   var self = this;
+  var defer = libQ.defer();
   var searchPodcast = data['search_input_podcast'].trim();
 
   self.logger.info("ControllerPodcast::searchPodcast:"+searchPodcast);
@@ -365,6 +378,7 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
         return (index > 30);    // limits search result
       });
       self.showSearchResultUI();
+      return defer.promise;
 /*
       this.emit('openModal', {
         'title':'title',
@@ -384,13 +398,21 @@ ControllerPodcast.prototype.searchPodcast = function(data) {
 
 ControllerPodcast.prototype.searchAddPodcast = function() {
   var self = this;
+  var defer = libQ.defer();
 
-  var searchedResult = self.configManager.getValue(self.uiconf,
-      'sections[2].content[1].value');
-  self.logger.info("ControllerPodcast::searchAddPodcast:" + JSON.stringify(
-      searchedResult));
+  var lang_code = self.commandRouter.sharedVars.get('language_code');
+  self.commandRouter.i18nJson(__dirname+'/i18n/strings_' + lang_code + '.json',
+      __dirname + '/i18n/strings_en.json',
+      __dirname + '/UIConfig.json')
+  .then(function(uiconf) {
+    var searchedResult = self.configManager.getValue(uiconf,
+        'sections[2].content[1].value');
+    self.logger.info("ControllerPodcast::searchAddPodcast:" + JSON.stringify(
+        searchedResult));
 
-  self.checkPodcast(searchedResult.url);
+    self.checkPodcast(searchedResult.url);
+    return defer.promise;
+  });
 };
 
 
