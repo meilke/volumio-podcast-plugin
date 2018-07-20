@@ -383,9 +383,9 @@ ControllerPodcast.prototype.searchAddPodcast = function(data) {
   var self = this;
 
   self.logger.info("ControllerPodcast::searchAddPodcast:" + JSON.stringify(
-      data));
+      data.search_result_podcast));
 
-  self.checkPodcast(data.url);
+  self.checkPodcast(data.search_result_podcast.url);
 };
 
 // Playback Controls ---------------------------------------------------------
